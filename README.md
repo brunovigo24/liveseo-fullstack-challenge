@@ -94,4 +94,4 @@ Os arquivos `.env` foram incluídos propositalmente no repositório para facilit
 
 **Em um projeto real de produção, estes arquivos nunca devem ser commitados no Git**, pois contêm informações sensíveis como credenciais de banco de dados, chaves de API, etc.
 
-Para este teste técnico, mantivemos os arquivos `.env` versionados apenas para simplificar a configuração e execução do projeto.
+Para este teste técnico, mantive os arquivos `.env` versionados apenas para simplificar a configuração e execução do projeto.
