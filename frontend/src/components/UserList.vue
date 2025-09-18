@@ -8,31 +8,15 @@
     <div v-else>
       <div class="controls">
         <SearchBar v-model="searchTerm" />
-        
-        <div class="view-controls">
-          <button 
-            @click="viewMode = 'cards'" 
-            :class="{ active: viewMode === 'cards' }"
-            class="view-button"
-          >
-            📱 Cards
-          </button>
-          <button 
-            @click="viewMode = 'table'" 
-            :class="{ active: viewMode === 'table' }"
-            class="view-button"
-          >
-            📋 Tabela
-          </button>
-        </div>
+        <ViewToggle :current-view="viewMode" @view-changed="handleViewChange" />
       </div>
-      
+
       <h2>Usuários ({{ filteredUsers.length }})</h2>
-      
+
       <div v-if="filteredUsers.length === 0 && searchTerm">
         Nenhum usuário encontrado para "{{ searchTerm }}"
       </div>
-      
+
       <!-- Cards View -->
       <div v-if="viewMode === 'cards'" class="users-grid">
         <div v-for="user in filteredUsers" :key="user.id" class="user-card">
@@ -41,7 +25,7 @@
           <p>{{ user.address.city }}</p>
         </div>
       </div>
-      
+
       <!-- Table View -->
       <div v-else class="users-table-container">
         <table class="users-table">
@@ -69,6 +53,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { userService } from '../services/UserService'
 import SearchBar from './SearchBar.vue'
+import ViewToggle from './ViewToggle.vue'
 import type { User, ViewMode } from '../types/user'
 
 const users = ref<User[]>([])
@@ -83,7 +68,7 @@ const filteredUsers = computed(() => {
   }
 
   const search = searchTerm.value.toLowerCase()
-  return users.value.filter(user => 
+  return users.value.filter(user =>
     user.name.toLowerCase().includes(search) ||
     user.email.toLowerCase().includes(search) ||
     user.address.city.toLowerCase().includes(search)
@@ -93,7 +78,7 @@ const filteredUsers = computed(() => {
 const fetchUsers = async () => {
   loading.value = true
   error.value = null
-  
+
   try {
     users.value = await userService.fetchUsers()
   } catch (err) {
@@ -101,6 +86,10 @@ const fetchUsers = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleViewChange = (newView: ViewMode) => {
+  viewMode.value = newView
 }
 
 onMounted(fetchUsers)
@@ -121,30 +110,7 @@ onMounted(fetchUsers)
   gap: 1rem;
 }
 
-.view-controls {
-  display: flex;
-  gap: 0.5rem;
-}
 
-.view-button {
-  padding: 0.5rem 1rem;
-  background: #f8f9fa;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.view-button:hover {
-  background: #e9ecef;
-}
-
-.view-button.active {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
-}
 
 /* Cards View */
 .users-grid {
@@ -228,11 +194,9 @@ button:hover {
     flex-direction: column;
     align-items: stretch;
   }
-  
-  .view-controls {
-    justify-content: center;
-  }
-  
+
+
+
   .users-grid {
     grid-template-columns: 1fr;
   }

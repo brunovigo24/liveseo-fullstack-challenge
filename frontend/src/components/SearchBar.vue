@@ -1,11 +1,20 @@
 <template>
     <div class="search-bar">
         <div class="search-input-container">
-            <div class="search-icon">🔍</div>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
             <input v-model="searchValue" type="text" class="search-input" placeholder="Buscar usuários..."
                 @input="handleInput" />
             <button v-if="searchValue" @click="clearSearch" class="clear-button" type="button">
-                ✕
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
             </button>
         </div>
     </div>
@@ -69,6 +78,8 @@ const clearSearch = () => {
 .search-icon {
     position: absolute;
     left: 0.5rem;
+    width: 16px;
+    height: 16px;
     color: #666;
     pointer-events: none;
     z-index: 1;
@@ -83,7 +94,16 @@ const clearSearch = () => {
     cursor: pointer;
     padding: 0.25rem;
     border-radius: 2px;
-    font-size: 1rem;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clear-button svg {
+    width: 14px;
+    height: 14px;
 }
 
 .clear-button:hover {
