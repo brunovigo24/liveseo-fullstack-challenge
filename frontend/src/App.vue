@@ -7,11 +7,7 @@
     
     <main class="app-main">
       <div class="container">
-        <!-- Main content will be added in subsequent tasks -->
-        <div class="placeholder">
-          <h2>Welcome to the User Management System</h2>
-          <p>This application will display users from JSONPlaceholder API</p>
-        </div>
+        <UserList />
       </div>
     </main>
     
@@ -22,8 +18,7 @@
 </template>
 
 <script setup lang="ts">
-// Main App component using Composition API
-// Additional functionality will be added in subsequent tasks
+import UserList from './components/UserList.vue'
 </script>
 
 <style scoped>
@@ -55,23 +50,7 @@
   padding: 0 1rem;
 }
 
-.placeholder {
-  text-align: center;
-  padding: 3rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 2px dashed #dee2e6;
-}
 
-.placeholder h2 {
-  color: #495057;
-  margin-bottom: 1rem;
-}
-
-.placeholder p {
-  color: #6c757d;
-  font-size: 1.1rem;
-}
 
 .app-footer {
   background-color: #f8f9fa;
