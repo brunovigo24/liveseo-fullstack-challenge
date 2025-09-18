@@ -1,26 +1,94 @@
 <template>
   <div class="user-list">
     <div v-if="loading">Carregando usuários...</div>
-    <div v-else-if="error">Error: {{ error }}</div>
+    <div v-else-if="error">
+      Erro: {{ error }}
+      <button @click="fetchUsers">Tentar novamente</button>
+    </div>
     <div v-else>
-      <h2>Usuários ({{ users.length }})</h2>
-      <div v-for="user in users" :key="user.id" class="user-card">
-        <h3>{{ user.name }}</h3>
-        <p>{{ user.email }}</p>
-        <p>{{ user.address.city }}</p>
+      <div class="controls">
+        <SearchBar v-model="searchTerm" />
+        
+        <div class="view-controls">
+          <button 
+            @click="viewMode = 'cards'" 
+            :class="{ active: viewMode === 'cards' }"
+            class="view-button"
+          >
+            📱 Cards
+          </button>
+          <button 
+            @click="viewMode = 'table'" 
+            :class="{ active: viewMode === 'table' }"
+            class="view-button"
+          >
+            📋 Tabela
+          </button>
+        </div>
+      </div>
+      
+      <h2>Usuários ({{ filteredUsers.length }})</h2>
+      
+      <div v-if="filteredUsers.length === 0 && searchTerm">
+        Nenhum usuário encontrado para "{{ searchTerm }}"
+      </div>
+      
+      <!-- Cards View -->
+      <div v-if="viewMode === 'cards'" class="users-grid">
+        <div v-for="user in filteredUsers" :key="user.id" class="user-card">
+          <h3>{{ user.name }}</h3>
+          <p>{{ user.email }}</p>
+          <p>{{ user.address.city }}</p>
+        </div>
+      </div>
+      
+      <!-- Table View -->
+      <div v-else class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Cidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in filteredUsers" :key="user.id">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.address.city }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { userService } from '../services/UserService'
-import type { User } from '../types/user'
+import SearchBar from './SearchBar.vue'
+import type { User, ViewMode } from '../types/user'
 
 const users = ref<User[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+const searchTerm = ref('')
+const viewMode = ref<ViewMode>('cards')
+
+const filteredUsers = computed(() => {
+  if (!searchTerm.value.trim()) {
+    return users.value
+  }
+
+  const search = searchTerm.value.toLowerCase()
+  return users.value.filter(user => 
+    user.name.toLowerCase().includes(search) ||
+    user.email.toLowerCase().includes(search) ||
+    user.address.city.toLowerCase().includes(search)
+  )
+})
 
 const fetchUsers = async () => {
   loading.value = true
@@ -40,213 +108,133 @@ onMounted(fetchUsers)
 
 <style scoped>
 .user-list {
-  width: 100%;
+  padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
 }
 
-/* Loading State */
-.loading-state {
+.controls {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
   margin-bottom: 1rem;
+  gap: 1rem;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Error State */
-.error-state {
+.view-controls {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-  background-color: #fff5f5;
-  border: 1px solid #fed7d7;
-  border-radius: 8px;
-  margin: 1rem 0;
-}
-
-.error-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.error-state h3 {
-  color: #e53e3e;
-  margin-bottom: 0.5rem;
-}
-
-.error-state p {
-  color: #c53030;
-  margin-bottom: 1.5rem;
-}
-
-.retry-button {
-  background-color: #3182ce;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
-}
-
-.retry-button:hover {
-  background-color: #2c5aa0;
-}
-
-/* Users Content */
-.users-content {
-  margin-top: 1rem;
-}
-
-.users-header {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.users-header h2 {
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-}
-
-.users-count {
-  color: #718096;
-  font-size: 1rem;
-}
-
-/* Users Grid */
-.users-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.user-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.user-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
   gap: 0.5rem;
 }
 
-.user-name {
-  color: #2d3748;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.user-email {
-  color: #4a5568;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.user-city {
-  color: #718096;
+.view-button {
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
   font-size: 0.9rem;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
 }
 
-/* Empty State */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-  background-color: #f7fafc;
-  border: 2px dashed #cbd5e0;
+.view-button:hover {
+  background: #e9ecef;
+}
+
+.view-button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Cards View */
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.user-card {
+  border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 2rem 0;
+  padding: 1rem;
+  background: white;
 }
 
-.empty-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
+.user-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
 }
 
-.empty-state h3 {
-  color: #4a5568;
-  margin-bottom: 0.5rem;
+.user-card p {
+  margin: 0.25rem 0;
+  color: #666;
 }
 
-.empty-state p {
-  color: #718096;
+/* Table View */
+.users-table-container {
+  margin-top: 1rem;
+  overflow-x: auto;
 }
 
-/* Responsive Design */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.users-table th,
+.users-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.users-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.users-table tr:hover {
+  background: #f8f9fa;
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* General buttons */
+button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .user-list {
-    padding: 0.5rem;
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .view-controls {
+    justify-content: center;
   }
   
   .users-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .user-card {
-    padding: 1rem;
-  }
-  
-  .users-header h2 {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .loading-state,
-  .error-state,
-  .empty-state {
-    padding: 2rem 1rem;
-  }
-  
-  .user-name {
-    font-size: 1.1rem;
-  }
-  
-  .user-email {
-    font-size: 0.9rem;
   }
 }
 </style>

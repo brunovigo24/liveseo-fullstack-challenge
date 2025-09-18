@@ -21,23 +21,4 @@ export interface User {
   };
 }
 
-// Interface de usuário simplificada para exibição no front
-export interface DisplayUser {
-  id: number;
-  name: string;
-  email: string;
-  city: string;
-}
-
-// Interface de estado para o componente de lista de usuários
-export interface UserListState {
-  users: User[];
-  filteredUsers: DisplayUser[];
-  loading: boolean;
-  error: string | null;
-  searchTerm: string;
-  viewMode: 'table' | 'cards';
-}
-
-// Tipo de modo de visualização 
 export type ViewMode = 'table' | 'cards';

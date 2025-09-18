@@ -1,4 +1,4 @@
-export type { User, DisplayUser, UserListState, ViewMode } from './user';
+export type { User, ViewMode } from './user';
 
 export type { 
   ApiResponse, 

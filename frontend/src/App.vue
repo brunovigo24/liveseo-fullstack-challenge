@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <header class="app-header">
-      <h1>Fullstack Technical Test</h1>
-      <p>Vue.js 3 + TypeScript Frontend Application</p>
+      <h1>Desafio Técnico – Desenvolvedor Fullstack</h1>
+      <p>Vue.js 3 + Aplicativo Frontend TypeScript</p>
     </header>
     
     <main class="app-main">
@@ -12,7 +12,7 @@
     </main>
     
     <footer class="app-footer">
-      <p>&copy; 2024 Fullstack Technical Test</p>
+      <p>&copy; 2025 Desafio Técnico – Desenvolvedor Fullstack</p>
     </footer>
   </div>
 </template>
