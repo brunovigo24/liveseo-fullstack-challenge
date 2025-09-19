@@ -1,9 +1,10 @@
 # Teste Técnico Fullstack
 
-Este projeto implementa um teste técnico para Desenvolvedor Fullstack Pleno, dividido em duas aplicações principais:
+Este projeto implementa um teste técnico para Desenvolvedor Fullstack Pleno, dividido em duas aplicações principais e uma documentação:
 
 1. **Frontend**: Aplicação Vue.js 3 para listagem de usuários
 2. **Backend**: API NestJS para gerenciamento de tarefas
+3. **Arquitetura e Resolução de Problemas**: Documentação disponível ao final do arquivo README
 
 ## Estrutura do Projeto
 
@@ -291,5 +292,6 @@ Em consultas como listar projetos → tarefas → comentários, eu cuidaria para
 - Aplicaria paginação nos comentários e tarefas para não trazer tudo de uma vez.
 
 - Criaria índices nos campos mais usados em filtros, como project_id em tarefas e task_id em comentários.
+
 
 Se em algum caso ainda houvesse lentidão, poderia usar contagens via subquery ou caching simples (ex.: Redis) para resultados mais acessados, mas sem complicar demais.
