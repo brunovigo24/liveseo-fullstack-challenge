@@ -28,7 +28,7 @@
       </button>
     </div>
     
-    <!-- Main Content -->
+    <!-- Conteúdo principal -->
     <div v-else class="animate-fade-in">
       <div class="card flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
         <SearchBar v-model="searchTerm" />
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <!-- No Results State -->
+      <!-- Nenhum usuário encontrado -->
       <div v-if="filteredUsers.length === 0 && searchTerm" class="flex flex-col items-center justify-center py-16 px-8 text-center bg-muted border border-border rounded-2xl my-8">
         <div class="w-16 h-16 text-muted-foreground mb-4">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
@@ -65,12 +65,12 @@
         <button @click="clearSearch" class="btn-secondary">Limpar busca</button>
       </div>
 
-      <!-- User Display Components -->
+
       <div v-else class="animate-slide-up">
-        <!-- Cards View -->
+
         <UserCards v-if="viewMode === 'cards'" :users="filteredUsers" />
 
-        <!-- Table View -->
+
         <UserTable v-else :users="filteredUsers" />
       </div>
     </div>
@@ -126,7 +126,6 @@ const clearSearch = () => {
   searchTerm.value = ''
 }
 
-// Expose methods for testing
 defineExpose({
   clearSearch
 })
