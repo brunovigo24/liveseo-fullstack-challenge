@@ -1,6 +1,6 @@
 <template>
-  <div class="table-modern">
-    <table class="w-full">
+  <div class="table-modern overflow-x-auto">
+    <table class="w-full min-w-[600px]">
       <thead>
         <tr>
           <th class="text-left">
@@ -53,17 +53,17 @@
       <tbody>
         <tr v-for="user in users" :key="user.id" class="group cursor-pointer">
           <td class="font-medium">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold text-sm">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div class="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold text-xs sm:text-sm">
                 {{ user.name.charAt(0).toUpperCase() }}
               </div>
-              <span class="group-hover:text-primary transition-colors duration-200">{{ user.name }}</span>
+              <span class="group-hover:text-primary transition-colors duration-200 text-sm sm:text-base truncate">{{ user.name }}</span>
             </div>
           </td>
           <td class="text-muted-foreground">
-            <span class="break-all">{{ user.email }}</span>
+            <span class="break-all text-xs sm:text-sm">{{ user.email }}</span>
           </td>
-          <td class="text-muted-foreground">{{ user.address.city }}</td>
+          <td class="text-muted-foreground text-sm sm:text-base">{{ user.address.city }}</td>
           <td class="text-muted-foreground hidden md:table-cell">
             {{ user.phone || '-' }}
           </td>
