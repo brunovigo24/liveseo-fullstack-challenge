@@ -70,6 +70,19 @@ O projeto está configurado com:
 - TypeScript para tipagem estática
 - SQLite para banco de dados
 
+## Testes da API
+
+Para testar as funcionalidades da API, você pode usar o arquivo de collection do Postman disponível na raiz do projeto:
+
+- **`Tasks_API_Postman_Collection.json`** - Collection completa com todas as rotas da API para testes
+
+### Como usar:
+
+1. Abra o Postman
+2. Importe o arquivo `Tasks_API_Postman_Collection.json`
+3. Certifique-se de que o backend esteja rodando (`npm run start:dev` na pasta backend)
+4. Execute as requisições da collection para testar todas as funcionalidades da API
+
 ## ⚠️ Nota sobre Arquivos de Ambiente
 
 Os arquivos `.env` foram incluídos propositalmente no repositório para facilitar a execução do teste técnico.
