@@ -1,18 +1,28 @@
 <template>
-  <div id="app">
-    <header class="app-header">
-      <h1>Desafio Técnico – Desenvolvedor Fullstack</h1>
-      <p>Vue.js 3 + Aplicativo Frontend TypeScript</p>
+  <div id="app" class="min-h-screen flex flex-col bg-background">
+    <header class="bg-primary text-primary-foreground shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-center">
+          Desafio Técnico – Desenvolvedor Fullstack - LiveSEO
+        </h1>
+        <p class="text-center opacity-90 mt-2 text-sm md:text-base">
+          Vue.js 3 + Aplicativo Frontend TypeScript
+        </p>
+      </div>
     </header>
-    
-    <main class="app-main">
-      <div class="container">
+
+    <main class="flex-1 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <UserList />
       </div>
     </main>
-    
-    <footer class="app-footer">
-      <p>&copy; 2025 Desafio Técnico – Desenvolvedor Fullstack</p>
+
+    <footer class="bg-card border-t border-border mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <p class="text-center text-muted-foreground text-sm">
+          &copy; 2025 Desafio Técnico – Desenvolvedor Fullstack - LiveSEO
+        </p>
+      </div>
     </footer>
   </div>
 </template>
@@ -20,47 +30,3 @@
 <script setup lang="ts">
 import UserList from './components/UserList.vue'
 </script>
-
-<style scoped>
-.app-header {
-  background-color: #2c3e50;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-}
-
-.app-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-}
-
-.app-header p {
-  margin: 0;
-  opacity: 0.8;
-}
-
-.app-main {
-  min-height: calc(100vh - 120px);
-  padding: 2rem 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-
-
-.app-footer {
-  background-color: #f8f9fa;
-  text-align: center;
-  padding: 1rem;
-  border-top: 1px solid #dee2e6;
-}
-
-.app-footer p {
-  margin: 0;
-  color: #6c757d;
-}
-</style>

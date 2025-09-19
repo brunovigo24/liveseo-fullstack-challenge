@@ -1,49 +1,77 @@
 <template>
-  <div class="user-list">
-    <div v-if="loading">Carregando usuários...</div>
-    <div v-else-if="error">
-      Erro: {{ error }}
-      <button @click="fetchUsers">Tentar novamente</button>
+  <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-96">
+    <!-- Loading State -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-8 text-center">
+      <div class="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin mb-4"></div>
+      <p class="text-muted-foreground text-lg">Carregando usuários...</p>
     </div>
-    <div v-else>
-      <div class="controls">
+    
+    <!-- Error State -->
+    <div v-else-if="error" class="flex flex-col items-center justify-center py-16 px-8 text-center bg-destructive/10 border border-destructive/20 rounded-2xl my-8">
+      <div class="w-16 h-16 text-destructive mb-4">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
+          <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold text-destructive mb-2">Erro ao carregar usuários</h3>
+      <p class="text-muted-foreground mb-6">{{ error }}</p>
+      <button @click="fetchUsers" class="btn-primary px-6 py-3 gap-2 flex items-center">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 3v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 21v-5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Tentar novamente
+      </button>
+    </div>
+    
+    <!-- Main Content -->
+    <div v-else class="animate-fade-in">
+      <div class="card flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
         <SearchBar v-model="searchTerm" />
         <ViewToggle :current-view="viewMode" @view-changed="handleViewChange" />
       </div>
 
-      <h2>Usuários ({{ filteredUsers.length }})</h2>
-
-      <div v-if="filteredUsers.length === 0 && searchTerm">
-        Nenhum usuário encontrado para "{{ searchTerm }}"
-      </div>
-
-      <!-- Cards View -->
-      <div v-if="viewMode === 'cards'" class="users-grid">
-        <div v-for="user in filteredUsers" :key="user.id" class="user-card">
-          <h3>{{ user.name }}</h3>
-          <p>{{ user.email }}</p>
-          <p>{{ user.address.city }}</p>
+      <div class="mb-6">
+        <h2 class="text-2xl lg:text-3xl font-bold text-foreground mb-2">
+          Usuários 
+          <span class="text-lg lg:text-xl font-normal text-muted-foreground">({{ filteredUsers.length }})</span>
+        </h2>
+        <div v-if="searchTerm" class="flex flex-col sm:flex-row sm:items-center gap-2 text-muted-foreground text-sm">
+          <span>Resultados para: <strong class="text-foreground">"{{ searchTerm }}"</strong></span>
+          <button @click="clearSearch" class="btn-ghost text-xs px-2 py-1 gap-1 self-start sm:self-auto flex items-center">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Limpar busca
+          </button>
         </div>
       </div>
 
-      <!-- Table View -->
-      <div v-else class="users-table-container">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Cidade</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in filteredUsers" :key="user.id">
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.address.city }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- No Results State -->
+      <div v-if="filteredUsers.length === 0 && searchTerm" class="flex flex-col items-center justify-center py-16 px-8 text-center bg-muted border border-border rounded-2xl my-8">
+        <div class="w-16 h-16 text-muted-foreground mb-4">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-foreground mb-2">Nenhum usuário encontrado</h3>
+        <p class="text-muted-foreground mb-6 max-w-md">Não encontramos usuários que correspondam à sua busca por <strong>"{{ searchTerm }}"</strong></p>
+        <button @click="clearSearch" class="btn-secondary">Limpar busca</button>
+      </div>
+
+      <!-- User Display Components -->
+      <div v-else class="animate-slide-up">
+        <!-- Cards View -->
+        <UserCards v-if="viewMode === 'cards'" :users="filteredUsers" />
+
+        <!-- Table View -->
+        <UserTable v-else :users="filteredUsers" />
       </div>
     </div>
   </div>
@@ -54,6 +82,8 @@ import { ref, computed, onMounted } from 'vue'
 import { userService } from '../services/UserService'
 import SearchBar from './SearchBar.vue'
 import ViewToggle from './ViewToggle.vue'
+import UserTable from './UserTable.vue'
+import UserCards from './UserCards.vue'
 import type { User, ViewMode } from '../types/user'
 
 const users = ref<User[]>([])
@@ -92,113 +122,15 @@ const handleViewChange = (newView: ViewMode) => {
   viewMode.value = newView
 }
 
+const clearSearch = () => {
+  searchTerm.value = ''
+}
+
+// Expose methods for testing
+defineExpose({
+  clearSearch
+})
+
 onMounted(fetchUsers)
 </script>
 
-<style scoped>
-.user-list {
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  gap: 1rem;
-}
-
-
-
-/* Cards View */
-.users-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.user-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  background: white;
-}
-
-.user-card h3 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.user-card p {
-  margin: 0.25rem 0;
-  color: #666;
-}
-
-/* Table View */
-.users-table-container {
-  margin-top: 1rem;
-  overflow-x: auto;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.users-table th,
-.users-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.users-table th {
-  background: #f8f9fa;
-  font-weight: 600;
-  color: #333;
-}
-
-.users-table tr:hover {
-  background: #f8f9fa;
-}
-
-.users-table tr:last-child td {
-  border-bottom: none;
-}
-
-/* General buttons */
-button {
-  margin-left: 1rem;
-  padding: 0.5rem 1rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-
-
-  .users-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
