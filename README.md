@@ -8,7 +8,7 @@ Este projeto implementa um teste técnico para Desenvolvedor Fullstack Pleno, di
 ## Estrutura do Projeto
 
 ```
-fullstack-technical-test/
+liveseo-fullstack-challenge/
 ├── frontend/                 # Vue.js 3 Application
 │   ├── src/
 │   ├── package.json
@@ -44,18 +44,6 @@ cd backend
 npm install
 npm run start:dev
 ```
-
-## Scripts Disponíveis
-
-### Frontend
-
-- `npm run dev` - Inicia o servidor de desenvolvimento
-- `npm run build` - Gera build de produção
-
-### Backend
-
-- `npm run start:dev` - Inicia o servidor em modo desenvolvimento
-- `npm run build` - Gera build de produção
 
 ## Tecnologias Utilizadas
 
